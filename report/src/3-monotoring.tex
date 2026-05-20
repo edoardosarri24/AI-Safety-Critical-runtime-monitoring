@@ -20,14 +20,20 @@ Let's see some terms that are usefull to known:
     \item \textbf{Data} \\
         Onviusually the data are the informations that will be treated by the system. These data can be both assered and unassured: in the first case we are reffering to the data that can be use directly from the system; in the second one we are referring to the data that must be validate throught the \textbf{Input Manager}.
     \item \textbf{Complex Function} \\
-        Is the module that cannot be certificated (e.g., AI model or very complex fucntion).
+        Is the module that cannot be certificated, usually an AI module. This AI component is composed by a data pre-processing, inference and post-processing; furthermore this componet can be implement with some degree of redundancy, with a voter at the end~\cite{abella2025safexplain}.
     \item \textbf{Recovery Function} \\
     It's an assured function that generate a bounded output to mantain the system in a safe state if the Complex Function fails.
     \item \textbf{Safety Monitor} \\
-        The assured function that is responsable to detect the fault behavior and send the command to the Switch. This module can observes both the RTA system and the Complex Function; this choice depend on the use case.
+        The assured function that is responsable to detect the fault behavior and send the command to the Switch. This module can observes both the RTA system and the Complex Function; this choice depend on the use case. This Monitor can perform the analysis on the AI module also in a hierarchical way (see Figure~\ref{fig:monitor:hierarchical_checker}): the low level monitor checks for evident error (e.g., out of distribution value) and the high level monitor checks for more semantics error~\cite{abella2025safexplain}.
     \item \textbf{Switch} \\
         An assered fuction that recive the command of switching from the Safety Monitor and switch to the Recovery Function.
 \end{itemize}
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/hierarchical_monitor.pdf}
+    \caption{RTA architecture with Hierarchical Monitor~\cite{agirre2025functional}.}
+    \label{fig:monitor:hierarchical_checker}
+\end{figure}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Coverage}
