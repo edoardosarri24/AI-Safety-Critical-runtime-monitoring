@@ -78,7 +78,7 @@ Usually these systems are composed by the elements shown in Figure~\ref{fig:AI_s
 \begin{figure}[htbp]
     \centering
     \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/2-overview/AI_system_components.pdf}
-    \caption{AI-Based safety-critical system components.}
+    \caption{AI-Based safety-critical system components~\cite{perez2024artificial}.}
     \label{fig:AI_system}
 \end{figure}
 
@@ -86,11 +86,9 @@ Usually these systems are composed by the elements shown in Figure~\ref{fig:AI_s
 \subsection{Product}
 As mentioned in Section~\ref{sec:application}, the product class describes a safety-critical system that relies on its SIS on one or more AI-based functions trained offline. These functions can be "simple", as in the case of a symbolist AI model, thus belonging to \textit{Class I}, or they can be very complex and belong to \textit{Class II}. In the first case, since the model is deterministic, we can use formal verification to ensure the system's compliance with FuSa. In the second case, the standard industry technique is to use a runtime checker that makes a safe choice for the next action if the model operates outside its requirements or produces an unsafe result.
 
-%%%%%%%%%%%%%
 \subsubsection{Testing}
 The main problem with these AI-based safety-critical systems is the assurance of safety that we can assign to them. This derive from the stochastic nature of AI models, which implies that they can have \textit{uncertainty failures}; to reduce this uncertainty, we must investigate unknown factors. Therefore, when describing safety functions in this scenario, we speak about intended functionality: their designs are a set of high-level objectives rather than a set of precise and well-defined instructions. This can be mitigated by applying formal verification methods, but even in this case, the black-box nature of the models suggests that these methods cannot be the only ones. Another challenge is the testing of the AI model itself, which is a widely explored area (e.g., test generation from an NLP model).
 
-%%%%%%%%%%%%%
 \subsubsection{Neural Networks}
 Although symbolist models provide understandability and explainability for their decisions, the most powerful models are Neural Networks (NNs).
 
@@ -105,7 +103,7 @@ When dealing with this kind of model, we must consider several detailed issues:
 %%%%%%%%%%%%%
 \subsection{Runtime}
 \label{sec:runtime}
-As discussed in Section~\ref{sec:application}, a runtime safety-critical system is able to change its AI module during execution. These are notable systems because they allow the SIS to evolve with the context: a case study reported a gas oil turbine where the safety function evolves as the engine degrades.
+As discussed in Section~\ref{sec:application}, a runtime safety-critical system is able to manage its AI module during execution. These are notable systems because they allow the SIS to evolve with the context: a case study reported a gas oil turbine where the safety function evolves as the engine degrades.
 
 This kind of solution bases its dependability and standard compliance on four different techniques:
 \begin{itemize}
