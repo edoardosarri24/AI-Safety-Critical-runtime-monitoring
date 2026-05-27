@@ -6,12 +6,15 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
+# package
+find_package(pybind11 REQUIRED)
+
 # flags
 add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wno-unused-parameter -Wno-long-long -Wno-pedantic)
 
 # optimizing in link phase.
 include(CheckIPOSupported)
-check_ipo_supported(RESULT lto_supported OUTPUT error
+check_ipo_supported(RESULT lto_supported OUTPUT error)
 if(lto_supported)
     message(STATUS "LTO (Link Time Optimization) is enabled.")
     set(CMAKE_INTERPROCEDURAL_OPTIMIZATION TRUE)
@@ -24,7 +27,7 @@ target_sources(ADAS_RTA PRIVATE
     src/main.cpp
     src/simulator.cpp
     src/acceleration_sampler.cpp
-    initial_state_sampler.cpp
+    src/initial_state_sampler.cpp
     src/leader_acceleration_model.cpp
 )
 
@@ -32,4 +35,14 @@ target_sources(ADAS_RTA PRIVATE
 target_include_directories(ADAS_RTA PRIVATE
     include
     ${CMAKE_CURRENT_BINARY_DIR}/include
+)
+
+# binding
+# binding (corretto con i percorsi delle cartelle)
+pybind11_add_module(simulator_cpp PRIVATE
+    bindings.cpp
+    src/simulator.cpp
+    src/initial_state_sampler.cpp
+    src/leader_acceleration_model.cpp
+    src/acceleration_sampler.cpp
 )

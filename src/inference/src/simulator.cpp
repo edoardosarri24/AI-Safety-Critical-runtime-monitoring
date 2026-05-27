@@ -29,7 +29,9 @@ void Simulator::step(const double ego_acceleration) {
         double old_leader_acceleration = leader_model_.get_acceleration(current_time_, old_leader_velocity);
         double new_ego_velocity = std::max(0.0, ego_velocity_ + ego_acceleration * dt);
         double new_leader_velocity = std::max(0.0, old_leader_velocity + old_leader_acceleration * dt);
-        double new_distance = distance_ + relative_velocity_ * dt;
+        double new_distance = distance_
+                + relative_velocity_ * dt
+                + 0.5 * (old_leader_acceleration - ego_acceleration) * std::pow(dt, 2);
         // Update
         ego_velocity_ = new_ego_velocity;
         distance_ = std::max(0.0, new_distance);
@@ -48,7 +50,7 @@ bool Simulator::is_truncated() const {
 
 double Simulator::calculate_reward(double ego_acceleration) const {
         double leader_velocity = ego_velocity_ + relative_velocity_;
-        double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*phisic_parameters::MAX_BRAKE);
+        double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*std::abs(phisic_parameters::MAX_BRAKE));
         if (distance_ <= 0 || distance_ >= simulation_parameter::MAX_DISTANCE)
                 return - 1000;
         double distance_from_target = std::abs(distance_ - simulation_parameter::TARGET_DISTANCE);

@@ -21,9 +21,9 @@ class Simulator {
         Simulator();
         void reset();
         void step(const double ego_acceleration);
-        double get_ego_velocity_() const {return ego_velocity_;};
-        double get_distance_() const {return distance_;};
-        double get_relative_velocity_() const {return relative_velocity_;};
+        double get_ego_velocity() const {return ego_velocity_;};
+        double get_distance() const {return distance_;};
+        double get_relative_velocity() const {return relative_velocity_;};
         bool is_terminated() const;
         bool is_truncated() const;
         double calculate_reward(double ego_acceleration) const;

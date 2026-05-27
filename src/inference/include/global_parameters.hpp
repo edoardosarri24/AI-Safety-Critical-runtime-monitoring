@@ -3,12 +3,6 @@
 
 #include <cstddef>
 
-namespace init_state {
-    constexpr double init_ego_velocity = 1;
-    constexpr double init_distance = 1;
-    constexpr double init_realtive_distance = 1;
-}
-
 namespace simulation_parameter {
     constexpr double dt = 0.1;
     constexpr double BRAKE_PROBABILITY = 0.3;

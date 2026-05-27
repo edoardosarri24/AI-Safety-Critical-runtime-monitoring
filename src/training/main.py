@@ -2,7 +2,8 @@
 # requires-python = ">=3.9"
 # dependencies = [
 #       "stable_baselines3",
-#       "torch"
+#       "torch",
+#       "pybind11"
 # ]
 # ///
 
