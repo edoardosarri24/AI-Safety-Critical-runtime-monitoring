@@ -1,0 +1,156 @@
+\chapter{Implementation}
+In Chapter~\ref{chap:RTA} we have seen the theory behind the RunTime Assurance. In this Chapter we will try to implement something that is related with this and that follow the idea of the runtime monitoring.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Scenario}
+The objective is to implement a safety-critical Advanced Driver Assistance System (ADAS) using the RTA pattern. The idea is that the Ego is managed by the AI Module until if fail; if and when the AI fail the safety module that the control and apply a safety behavior implemented in the recoverty function.
+
+%%%%%%%%%%%%%%
+\subsection{Component}
+This scenrio is based on two component:
+\begin{itemize}
+    \item \textbf{Leader Car (L)} \\
+        It's the indipendent vehicle that go ahead. It's governates by an accelleration $a_L(t)$, that is unkown from the point of view of our system (i.e., the Ego Car).
+    \item \textbf{Ego Car (E)}: It's our vehicle on which we have control and represent our safety-critical system. In the same way of $L$ we have control on $E$ throught the acceleration function $a_E(t)$.
+\end{itemize}
+
+%%%%%%%%%%%%%%
+\subsection{Acceleration Function}
+The idea behind the acceration function $a_L(t)$ is the following: we want a continuos and differentiable function; is the function is deterministic episode by episode the agent only learn the current pattern. So we have to defined a function in order to have an accelation deterministic during the single episode, but non deterministic episode by episode.
+
+
+The function can so be described as
+\begin{equation}
+    a_L(t) =
+    \begin{cases}
+        \text{clip}\left(A \sin(\omega t + \phi), -8.0, 3.0\right) & \text{if } t < t_{\text{brake}} \\
+        a_{\text{max\_brake}} & \text{if } t \ge t_{\text{brake}} \text{ and } v_L(t) > 0 \\
+        0 & \text{otherwise},
+    \end{cases}
+\end{equation}
+where:
+\begin{itemize}
+    \item $t_{break}$ \\
+        With a given probability during the episode the Leader car break with the maximum force.
+        \begin{equation}
+            t_{\text{brake}} =
+            \begin{cases}
+                \tau \sim \mathcal{U}(5, 20) & \text{with } p = 0.3 \\
+                \infty & \text{with } p = 0.7
+            \end{cases}
+        \end{equation}
+    \item $A$ \\
+        Represent the maximim magnitude of the accelation. If it's grether than the maximum power of the engine the result is a constant $a_L$. It's defined as $A \sim \mathcal{U}(1.0, 5.0)\,\text{m/s}^2$.
+    \item $\omega$ \\
+        it's the frequency fo the sinusoide function. It's defined as $\omega \sim \mathcal{U}(0.1, 0.4)\,\text{rad/s}$ is the angular frequency.
+    \item $\phi$ \\
+        It's the traslation point and means the initial value of $a_L$ of the simulation. It is defined as $\phi \sim \mathcal{U}(0, 2\pi)$.
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Simulator}
+The data to train the neural network and for the inference are given from a simulator. The maximim duration of the single episode is 30s.
+
+%%%%%%%%%%%%%%
+\subsection{Kinematics Rules}
+The simulation evolve following the second order kinematics rules. These rules are defined in a discrete way with a time-tick of $\Delta t = 0.1\,s$ ans do we have that $t+1=t+\Delta t$.
+
+\begin{equation}
+v_L(t+1) = \max\left(0, v_L(t) + a_L(t) \cdot \Delta t\right),
+\end{equation}
+\begin{equation}
+x_L(t+1) = x_L(t) + v_L(t) \cdot \Delta t + \frac{1}{2}a_L(t) \cdot \Delta t^2,
+\end{equation}
+\begin{equation}
+v_E(t+1) = \max\left(0, v_E(t) + a_E(t) \cdot \Delta t\right),
+\end{equation}
+\begin{equation}
+x_E(t+1) = x_E(t) + v_E(t) \cdot \Delta t + \frac{1}{2}a_E(t) \cdot \Delta t^2,
+\end{equation}
+where: the $\max$ function means that the two cars can go only ahead; $x(t)$ denotes position; $v(t)$ denotes velocity; $a(t)$ denotes the acceleration and it's bounded by the vehicle constraints, in this case defined as $-8.0 \,\text{m/s}^2 \le a(t) \le 3.0\,\text{m/s}^2$ for both vehicles.
+
+%%%%%%%%%%%%%%
+\subsection{State}
+The observable system states accessible to the controllers at any step $t$ are:
+\begin{itemize}
+    \item $d(t) = x_L(t) - x_E(t)$,\, $v_{\text{rel}}(t) = v_L(t) - v_E(t)$ \\
+        These are the distance from the two vehicles and the relavive velocity. These information are given throught the radar sensor (e.g., Lidar).
+    \item $v_E(t)$ \\
+        This is the Ego absolute velocity. It's accessible thorught the Ego car sensor.
+\end{itemize}
+
+%%%%%%%%%%%%%%
+\subsection{Initial Conditions}
+At the beginning of each episode for $t=0$, the initial state of the environment is sampled from uniform distributions to ensure generalization:
+\begin{itemize}
+    \item $x_E(0) = 0\,\text{m}$ (The Ego car starts at the origin).
+    \item $d(0) \sim \mathcal{U}(5.0,20.0)\,\text{m}$.
+    \item $v_L(0) \sim \mathcal{U}(10.0, 20.0)\,\text{m/s}$ (Initial velocity of the Leader car).
+    \item $v_E(0) \sim \mathcal{U}(10.0, 20.0)\,\text{m/s}$ (Initial velocity of the Ego car).
+    \item $a_E(-1) = 0.0\,\text{m/s}^2$ (Assumed previous acceleration for the first step comfort reward).
+\end{itemize}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Architecture}
+If we look at Section~\ref{sec:application}, we can say that the idea is to implement a \textit{Product} system of \textit{Class II}: we have a complex component, the AI network that predict $a_E(t)$, that is not deterministic and not-trusted but it's guaranteed by a monitor module.
+
+%%%%%%%%%%%%%%
+\subsection{AI Module}
+The AI module, trained with the Reiforcement Learning (RL) paradigm, take in input a tensor with 3 dimension $\displaystyle S_t = \begin{bmatrix} v_E(t) \\ d(t) \\ v_{\text{rel}}(t) \end{bmatrix} \in \mathbb{R}^3$; its task is predict the $a_E(t)\in[-8.0,3.0]\subset\mathbb{R}$ acceleration of the Ego vehicle.
+
+Since we have to predict a function, the neural network is a Multi Layer Perceptron (MLP): the activation function is a ReLu; the input layer has 3 neurons (i.e., the input size); the ouput has only 1 neuron (i.e., the scalar value of the accelaration); the hidden layers are composed by $[16,32,32,16]$ neurons.
+
+%%%%%%%%%%%%%%
+\subsection{Safety Monitor}
+This is the deterministic and assured module that take the command of the Ego car in case of AI failure. It compute the minum distance that should be among the two cars in the situation in which the Leader break with the maximum power. This safety distance can be define as
+\begin{equation}
+    d_{critical} = v_E(t) \cdot \Delta t + \frac{v_E(t)^2 - v_L(t)^2}{2\cdot |a_{\text{max\_brake}}|},
+\end{equation}
+where $v_E(t)\cdot \Delta t$ is the reacetion time of the system and it's necessary because the breking phase doen't start immediatly but only after $\Delta t$ ticks; $v_L(t)=v_{rel}(t)+v_E(t)$; $a_{\text{max\_brake}}=-8.0$.
+
+The safety monitor has to take the management of the system if $d(t)\le d_{critical}$.
+
+%%%%%%%%%%%%%%
+\subsection{Recovery Function}
+The recovery function implement a fail safe behavior: the $E$ vehicle will stop with the maxium break power (i.e., $a=-8.0\,\text{m/s}^2$).
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Implementation Detail}
+In this Section we will go into detail of the implementation choice.
+
+%%%%%%%%%%%%%%
+\subsection{Algorithm}
+The environment is provided by the Gymnasium API. The training is performed using the PPO algorithm of Stable-Baselines3 library, more stable respect of Reinforce. The hyperparameter of this algorithm are the following: $\gamma=0.99$; the number of samples for each partial update $batch\_size=64$; $n\_steps=1028$ is the number of steps (circa 3/4 episodes) after which the update is performed; $clip\_range=0.2$ avoids that the netowrk change more thn 20\%.
+
+%%%%%%%%%%%%%%
+\subsection{Environment}
+The simulator is written in C++.
+
+For the Neural Network training the function that the environment call are the same that the inference call, and this is garanteed by the \texttt{pybind11} that allow us to call C++ code directly in Python.
+
+For the inference the neural network will be embedded in the system with the \texttt{ONNX} API.
+
+%%%%%%%%%%%%%%
+\subsection{Reward Function}
+The reward function in usually the most critical part in RL. In this case we want provide both a safety and confort behavoir and so we can describe the reward function as $R_t=R_{distance}+R_{comfort}+R_{penalty}$, where:
+\begin{itemize}
+    \item $R_{distance}=-\alpha|d(t)-d_{target}|$, where $d_{target}=10\ m$.
+    \item $R_{comfort}=-\beta |a_E(t-1)-a_E(t)|$. We want penalize sudden break.
+    \item $R_{penalty}$ represent the entering of the agent in the critical zone, so if $d_{critical}<d(t)<0$. It's defined as $R_{penalty} = \begin{cases} -20 & \text{if } d(t) \le d_{critical} \\ 0 & \text{otherwise} \end{cases}$.
+\end{itemize}
+We also provide an additional reward of $R_{critical}=-1000$ if $d(t)< d_{critical}$ or if $d(t)>d_{max}=50\, m$. In both cases, the episode is immediately terminated.
+
+\subsection{Episode Termination}
+The episode doesn't terminate when $d(t) \le d_{\text{critical}}$. Instead, the simulation while the agent take a negative reward. The episode terminates immediately if:
+\begin{itemize}
+    \item Collision: $d(t) \le 0$ (Terminal penalty: $R_{\text{terminal}} = -1000$)
+    \item Leader Lost: $d(t) > d_{\text{max}} = 50\,\text{m}$ (Terminal penalty: $R_{\text{terminal}} = -1000$).
+    \item Timeout: The episode reaches its maximum duration of $30\,\text{s}$.
+\end{itemize}
+
+%%%%%%%%%%%%%%
+\subsection{Value}
+\begin{itemize}
+    \item $\alpha = 1$
+    \item $\beta = 0.9$
+\end{itemize}
