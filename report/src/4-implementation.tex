@@ -138,7 +138,7 @@ The reward function in usually the most critical part in RL. In this case we wan
     \item $R_{comfort}=-\beta |a_E(t-1)-a_E(t)|$. We want penalize sudden break.
     \item $R_{penalty}$ represent the entering of the agent in the critical zone, so if $d_{critical}<d(t)<0$. It's defined as $R_{penalty} = \begin{cases} -20 & \text{if } d(t) \le d_{critical} \\ 0 & \text{otherwise} \end{cases}$.
 \end{itemize}
-We also provide an additional reward of $R_{critical}=-1000$ if $d(t)< d_{critical}$ or if $d(t)>d_{max}=50\, m$. In both cases, the episode is immediately terminated.
+We immidiatly return a reward of $R_{critical}=-1000$ if $d(t)\le0$ or if $d(t)>d_{max}=50\, m$. In both cases, the episode is immediately terminated.
 
 \subsection{Episode Termination}
 The episode doesn't terminate when $d(t) \le d_{\text{critical}}$. Instead, the simulation while the agent take a negative reward. The episode terminates immediately if:

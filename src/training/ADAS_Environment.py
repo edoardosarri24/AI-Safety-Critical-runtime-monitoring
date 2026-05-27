@@ -11,7 +11,7 @@ from gymnasium import spaces
 import numpy as np
 
 class ADAS_Environment(gym.Env):
-    
+
     def __init__(self):
         super(ADAS_Environment, self).__init__()
         # Initialize the underlying C++ simulator instance
@@ -30,10 +30,10 @@ class ADAS_Environment(gym.Env):
 
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        
+
         # self.sim.reset(seed)
         # state = self.sim.get_state() 
-        
+
         # Placeholder for the state: [v_E(0), d(0), v_rel(0)]
         state = np.array([15.0, 10.0, 0.0], dtype=np.float32)
 
@@ -43,13 +43,13 @@ class ADAS_Environment(gym.Env):
     def step(self, action):
         # Map normlized action from [-1.0,1-0] to [-8.0,3.0].
         acceleration = -2.5 + (action[0] * 5.5)
-        
+
         # self.sim.step(acceleration)
         # state = self.sim.get_state()
         # reward = self.sim.calculate_reward()
         # terminated = self.sim.is_terminated() # Checks collision or leader lost
         # truncated = self.sim.is_truncated()   # Checks 30s timeout
-        
+
         # Placeholders
         state = np.array([15.0, 10.0, 0.0], dtype=np.float32)
         reward = 0.1

@@ -22,9 +22,10 @@ endif()
 # sources
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp
-    src/data_loader.cpp
-    src/query_loader.cpp
-    src/SAD_distance.cpp
+    src/simulator.cpp
+    src/acceleration_sampler.cpp
+    initial_state_sampler.cpp
+    src/leader_acceleration_model.cpp
 )
 
 # includes
