@@ -1,0 +1,1 @@
+uv run src/training/main.py
