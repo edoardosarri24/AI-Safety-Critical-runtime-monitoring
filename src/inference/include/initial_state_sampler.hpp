@@ -12,10 +12,12 @@ class InitialStateSampler {
         std::uniform_real_distribution<double> dist_velocity_ego_;
 
     public:
-        InitialStateSampler();
-        double sample_distance();
-        double sample_velocity_leader();
-        double sample_velocity_ego();
+        explicit InitialStateSampler() noexcept;
+        InitialStateSampler (const InitialStateSampler&) = delete;
+        InitialStateSampler& operator=(const InitialStateSampler&) = delete;
+        double sample_distance() noexcept;
+        double sample_velocity_leader() noexcept;
+        double sample_velocity_ego() noexcept;
 };
 
 #endif // INITIAL_STATE_SAMPLER_HPP

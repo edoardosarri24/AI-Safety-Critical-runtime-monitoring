@@ -3,7 +3,7 @@
 #include <cmath>
 #include <algorithm>
 
-LeaderAccelerationModel::LeaderAccelerationModel() :
+LeaderAccelerationModel::LeaderAccelerationModel() noexcept :
     sampler_(),
     current_A_(0.0),
     current_omega_(0.0),
@@ -12,21 +12,21 @@ LeaderAccelerationModel::LeaderAccelerationModel() :
         reset();
     }
 
-void LeaderAccelerationModel::reset() {
+void LeaderAccelerationModel::reset() noexcept {
     current_A_ = sampler_.sample_amplitude();
     current_omega_ = sampler_.sample_omega();
     current_phi_ = sampler_.sample_phi();
     current_t_brake_ = sampler_.sample_t_brake();
 }
 
-double LeaderAccelerationModel::get_acceleration(double time, double leader_velocity) const {
+double LeaderAccelerationModel::get_acceleration(double time, double leader_velocity) const noexcept {
     if (time < current_t_brake_) {
         // Calculate raw sine wave
         double raw_acceleration = current_A_ * std::sin(current_omega_ * time + current_phi_);
-        return std::clamp(raw_acceleration, phisic_parameters::MIN_ACCELLERATION, phisic_parameters::MAX_ACCELLERATION);
+        return std::clamp(raw_acceleration, physic_parameters::MIN_ACCELLERATION, physic_parameters::MAX_ACCELLERATION);
     } else if (time >= current_t_brake_ && leader_velocity > 0.0) {
         // Maximum braking force applied
-        return phisic_parameters::MAX_BRAKE;
+        return physic_parameters::MAX_BRAKE;
     } else {
         // Vehicle is stopped or other condition
         return 0.0;

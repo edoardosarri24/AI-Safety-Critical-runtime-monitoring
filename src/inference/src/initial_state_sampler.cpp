@@ -1,19 +1,19 @@
 #include "initial_state_sampler.hpp"
 
-InitialStateSampler::InitialStateSampler() :
+InitialStateSampler::InitialStateSampler() noexcept :
     random_engine_(std::random_device{}()),
     dist_distance_(5.0, 20.0),
     dist_velocity_leader_(10.0, 20.0),
     dist_velocity_ego_(10.0, 20.0) {}
 
-double InitialStateSampler::sample_distance() {
+double InitialStateSampler::sample_distance() noexcept {
     return dist_distance_(random_engine_);
 }
 
-double InitialStateSampler::sample_velocity_leader() {
+double InitialStateSampler::sample_velocity_leader() noexcept {
     return dist_velocity_leader_(random_engine_);
 }
 
-double InitialStateSampler::sample_velocity_ego() {
+double InitialStateSampler::sample_velocity_ego() noexcept {
     return dist_velocity_ego_(random_engine_);
 }

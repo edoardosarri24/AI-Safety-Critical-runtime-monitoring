@@ -7,17 +7,18 @@ class LeaderAccelerationModel {
 
     private:
         AccelerationSampler sampler_;
-
-        // Episode-specific parameters
+        // Current-Episode parameters
         double current_A_;
         double current_omega_;
         double current_phi_;
         double current_t_brake_;
 
     public:
-        LeaderAccelerationModel();
-        void reset();
-        double get_acceleration(double time, double leader_velocity) const;
+        explicit LeaderAccelerationModel() noexcept;
+        LeaderAccelerationModel (const LeaderAccelerationModel&) = delete;
+        LeaderAccelerationModel& operator=(const LeaderAccelerationModel&) = delete;
+        void reset() noexcept;
+        double get_acceleration(double time, double leader_velocity) const noexcept;
 };
 
 #endif // LEADER_ACCELERATION_MODEL_HPP

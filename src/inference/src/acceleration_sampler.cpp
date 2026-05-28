@@ -4,7 +4,7 @@
 
 constexpr double PI = 3.14159265358979323846;
 
-AccelerationSampler::AccelerationSampler() :
+AccelerationSampler::AccelerationSampler() noexcept :
     random_engine_(std::random_device{}()),
     dist_amplitude_(1.0, 5.0),
     dist_omega_(0.1, 0.4),
@@ -12,19 +12,19 @@ AccelerationSampler::AccelerationSampler() :
     dist_t_brake_(5.0, 20.0),
     dist_probability_(0.0, 1.0) {}
 
-double AccelerationSampler::sample_amplitude() {
+double AccelerationSampler::sample_amplitude() noexcept {
     return dist_amplitude_(random_engine_);
 }
 
-double AccelerationSampler::sample_omega() {
+double AccelerationSampler::sample_omega() noexcept {
     return dist_omega_(random_engine_);
 }
 
-double AccelerationSampler::sample_phi() {
+double AccelerationSampler::sample_phi() noexcept {
     return dist_phi_(random_engine_);
 }
 
-double AccelerationSampler::sample_t_brake() {
+double AccelerationSampler::sample_t_brake() noexcept {
     if (dist_probability_(random_engine_) < simulation_parameter::BRAKE_PROBABILITY) {
         return dist_t_brake_(random_engine_);
     } else {

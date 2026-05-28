@@ -1,7 +1,7 @@
 #include "simulator.hpp"
 #include "global_parameters.hpp"
 
-Simulator::Simulator() :
+Simulator::Simulator() noexcept :
         state_sampler_(),
         current_time_(0.0),
         leader_model_(),
@@ -12,7 +12,7 @@ Simulator::Simulator() :
                 relative_velocity_ = initial_velocity_leader - ego_velocity_;
         };
 
-void Simulator::reset() {
+void Simulator::reset() noexcept {
         ego_velocity_ = state_sampler_.sample_velocity_ego();
                 distance_ = state_sampler_.sample_distance();
                 double initial_velocity_leader = state_sampler_.sample_velocity_leader();
@@ -22,7 +22,7 @@ void Simulator::reset() {
         previus_ego_accelation_ = 0.0;
 }
 
-void Simulator::step(const double ego_acceleration) {
+void Simulator::step(const double ego_acceleration) noexcept {
         // Calcolus
         double dt = simulation_parameter::dt;
         double old_leader_velocity = ego_velocity_ + relative_velocity_;
@@ -40,17 +40,17 @@ void Simulator::step(const double ego_acceleration) {
         previus_ego_accelation_ = ego_acceleration;
 }
 
-bool Simulator::is_terminated() const {
+bool Simulator::is_terminated() const noexcept {
         return distance_ <= 0.0;
 }
 
-bool Simulator::is_truncated() const {
+bool Simulator::is_truncated() const noexcept {
         return current_time_ >= simulation_parameter::MAX_TIME;
 }
 
-double Simulator::calculate_reward(double ego_acceleration) const {
+double Simulator::calculate_reward(double ego_acceleration) const noexcept {
         double leader_velocity = ego_velocity_ + relative_velocity_;
-        double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*std::abs(phisic_parameters::MAX_BRAKE));
+        double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*std::abs(physic_parameters::MAX_BRAKE));
         if (distance_ <= 0 || distance_ >= simulation_parameter::MAX_DISTANCE)
                 return - 1000;
         double distance_from_target = std::abs(distance_ - simulation_parameter::TARGET_DISTANCE);

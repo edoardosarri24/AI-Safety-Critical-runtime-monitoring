@@ -37,4 +37,3 @@ def save_model(model):
             {0: torch.export.Dim("batch_size")},
         )
     )
-    print("Model exported sucessfully")

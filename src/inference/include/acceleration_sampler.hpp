@@ -14,11 +14,13 @@ class AccelerationSampler {
         std::uniform_real_distribution<double> dist_probability_;
 
     public:
-        AccelerationSampler();
-        double sample_amplitude();
-        double sample_omega();
-        double sample_phi();
-        double sample_t_brake();
+        explicit AccelerationSampler() noexcept;
+        AccelerationSampler(const AccelerationSampler&) = delete;
+        AccelerationSampler& operator=(const AccelerationSampler&) = delete;
+        double sample_amplitude() noexcept;
+        double sample_omega() noexcept;
+        double sample_phi() noexcept;
+        double sample_t_brake() noexcept;
 };
 
 #endif // ACCELERATION_SAMPLER_HPP
