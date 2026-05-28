@@ -1,7 +1,7 @@
 #ifndef LEADER_ACCELERATION_MODEL_HPP
 #define LEADER_ACCELERATION_MODEL_HPP
 
-#include "acceleration_sampler.hpp"
+#include "sampler/acceleration_sampler.hpp"
 
 class LeaderAccelerationModel {
 
@@ -15,8 +15,6 @@ class LeaderAccelerationModel {
 
     public:
         explicit LeaderAccelerationModel() noexcept;
-        LeaderAccelerationModel (const LeaderAccelerationModel&) = delete;
-        LeaderAccelerationModel& operator=(const LeaderAccelerationModel&) = delete;
         void reset() noexcept;
         double get_acceleration(double time, double leader_velocity) const noexcept;
 };

@@ -1,12 +1,12 @@
 #ifndef INITIAL_STATE_SAMPLER_HPP
 #define INITIAL_STATE_SAMPLER_HPP
 
+#include "sampler/sampler.hpp"
 #include <random>
 
-class InitialStateSampler {
+class InitialStateSampler : public Sampler {
 
     private:
-        std::mt19937_64 random_engine_;
         std::uniform_real_distribution<double> dist_distance_;
         std::uniform_real_distribution<double> dist_velocity_leader_;
         std::uniform_real_distribution<double> dist_velocity_ego_;

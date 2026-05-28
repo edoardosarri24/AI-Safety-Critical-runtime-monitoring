@@ -1,7 +1,6 @@
-#include "initial_state_sampler.hpp"
+#include "sampler/initial_state_sampler.hpp"
 
 InitialStateSampler::InitialStateSampler() noexcept :
-    random_engine_(std::random_device{}()),
     dist_distance_(5.0, 20.0),
     dist_velocity_leader_(10.0, 20.0),
     dist_velocity_ego_(10.0, 20.0) {}

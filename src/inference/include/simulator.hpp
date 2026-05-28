@@ -3,7 +3,7 @@
 
 #include <vector>
 #include <string>
-#include "initial_state_sampler.hpp"
+#include "sampler/initial_state_sampler.hpp"
 #include "leader_acceleration_model.hpp"
 
 class Simulator {

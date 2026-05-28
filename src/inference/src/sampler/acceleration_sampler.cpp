@@ -1,11 +1,10 @@
-#include "acceleration_sampler.hpp"
+#include "sampler/acceleration_sampler.hpp"
 #include "global_parameters.hpp"
 #include <limits>
 
 constexpr double PI = 3.14159265358979323846;
 
 AccelerationSampler::AccelerationSampler() noexcept :
-    random_engine_(std::random_device{}()),
     dist_amplitude_(1.0, 5.0),
     dist_omega_(0.1, 0.4),
     dist_phi_(0.0, 2.0 * PI),

@@ -1,12 +1,12 @@
 #ifndef ACCELERATION_SAMPLER_HPP
 #define ACCELERATION_SAMPLER_HPP
 
+#include "sampler/sampler.hpp"
 #include <random>
 
-class AccelerationSampler {
+class AccelerationSampler : public Sampler {
 
     private:
-        std::mt19937_64 random_engine_;
         std::uniform_real_distribution<double> dist_amplitude_;
         std::uniform_real_distribution<double> dist_omega_;
         std::uniform_real_distribution<double> dist_phi_;
@@ -15,8 +15,6 @@ class AccelerationSampler {
 
     public:
         explicit AccelerationSampler() noexcept;
-        AccelerationSampler(const AccelerationSampler&) = delete;
-        AccelerationSampler& operator=(const AccelerationSampler&) = delete;
         double sample_amplitude() noexcept;
         double sample_omega() noexcept;
         double sample_phi() noexcept;

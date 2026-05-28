@@ -29,22 +29,23 @@ target_include_directories(ADAS_RTA PRIVATE
 )
 
 # Sources
+set(COMMON_SOURCES
+    src/simulator.cpp
+    src/leader_acceleration_model.cpp
+    src/sampler/sampler.cpp
+    src/sampler/initial_state_sampler.cpp
+    src/sampler/acceleration_sampler.cpp
+)
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp
-    src/simulator.cpp
-    src/acceleration_sampler.cpp
-    src/initial_state_sampler.cpp
-    src/leader_acceleration_model.cpp
+    ${COMMON_SOURCES}
 )
 
 # Dependencies
 find_package(pybind11 REQUIRED)
 pybind11_add_module(simulator_cpp
     src/bindings.cpp
-    src/simulator.cpp
-    src/initial_state_sampler.cpp
-    src/leader_acceleration_model.cpp
-    src/acceleration_sampler.cpp
+    ${COMMON_SOURCES}
 )
 target_include_directories(simulator_cpp PRIVATE
     include

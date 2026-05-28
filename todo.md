@@ -1,1 +1,0 @@
-- rivedi cmake e training.sh
