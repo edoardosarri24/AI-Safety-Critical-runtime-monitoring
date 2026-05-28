@@ -6,9 +6,6 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
 
-# Package
-find_package(pybind11 REQUIRED)
-
 # Flags
 add_compile_options(-Wall -Wextra -Wpedantic -Wconversion -Wno-unused-parameter -Wno-long-long -Wno-pedantic)
 
@@ -22,7 +19,7 @@ else()
     message(WARNING "LTO not supported: ${error}")
 endif()
 
-# --- DEFINIZIONE TARGET ESEGUIBILE C++ ---
+# Target
 add_executable(ADAS_RTA)
 
 # Includes
@@ -31,7 +28,7 @@ target_include_directories(ADAS_RTA PRIVATE
     ${CMAKE_CURRENT_BINARY_DIR}/include
 )
 
-# Sources for executable
+# Sources
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp
     src/simulator.cpp
@@ -40,8 +37,8 @@ target_sources(ADAS_RTA PRIVATE
     src/leader_acceleration_model.cpp
 )
 
-# --- DEFINIZIONE TARGET MODULO PYTHON (BINDING) ---
-# RIMOSSO 'PRIVATE' DA QUI SOTTO
+# Dependencies
+find_package(pybind11 REQUIRED)
 pybind11_add_module(simulator_cpp
     src/bindings.cpp
     src/simulator.cpp
@@ -49,7 +46,6 @@ pybind11_add_module(simulator_cpp
     src/leader_acceleration_model.cpp
     src/acceleration_sampler.cpp
 )
-
 target_include_directories(simulator_cpp PRIVATE
     include
 )
