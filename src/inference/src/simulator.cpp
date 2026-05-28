@@ -5,7 +5,8 @@ Simulator::Simulator() noexcept :
         state_sampler_(),
         current_time_(0.0),
         leader_model_(),
-        previus_ego_accelation_(0.0) {
+        previus_ego_accelation_(0.0),
+        pre_step_ego_acceleration_(0.0) {
                 ego_velocity_ = state_sampler_.sample_velocity_ego();
                 distance_ = state_sampler_.sample_distance();
                 double initial_velocity_leader = state_sampler_.sample_velocity_leader();
@@ -20,9 +21,12 @@ void Simulator::reset() noexcept {
         current_time_ = 0.0;
         leader_model_.reset();
         previus_ego_accelation_ = 0.0;
+        pre_step_ego_acceleration_ = 0.0;
 }
 
 void Simulator::step(const double ego_acceleration) noexcept {
+        pre_step_ego_acceleration_ = previus_ego_accelation_;
+
         // Calcolus
         double dt = simulation_parameter::dt;
         double old_leader_velocity = ego_velocity_ + relative_velocity_;
@@ -41,7 +45,7 @@ void Simulator::step(const double ego_acceleration) noexcept {
 }
 
 bool Simulator::is_terminated() const noexcept {
-        return distance_ <= 0.0;
+        return distance_ <= 0.0 || distance_ >= simulation_parameter::MAX_DISTANCE;
 }
 
 bool Simulator::is_truncated() const noexcept {
@@ -51,14 +55,14 @@ bool Simulator::is_truncated() const noexcept {
 double Simulator::calculate_reward(double ego_acceleration) const noexcept {
         double leader_velocity = ego_velocity_ + relative_velocity_;
         double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*std::abs(physic_parameters::MAX_BRAKE));
-        if (distance_ <= 0 || distance_ >= simulation_parameter::MAX_DISTANCE)
-                return - 1000;
+        if (distance_ <= 0.0 || distance_ >= simulation_parameter::MAX_DISTANCE)
+                return -1000.0;
         double distance_from_target = std::abs(distance_ - simulation_parameter::TARGET_DISTANCE);
         double distance_reward = - simulation_parameter::ALPHA * distance_from_target;
-        double ego_accelaration_distance = std::abs(previus_ego_accelation_ - ego_acceleration);
+        double ego_accelaration_distance = std::abs(pre_step_ego_acceleration_ - ego_acceleration);
         double comfort_reward = - simulation_parameter::BETA * ego_accelaration_distance;
-        double penality_reward = 0;
+        double penality_reward = 0.0;
         if (distance_ <= critical_distance)
-                penality_reward = -20;
+                penality_reward = -20.0;
         return distance_reward + comfort_reward + penality_reward;
 }

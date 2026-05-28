@@ -16,6 +16,7 @@ class Simulator {
         double current_time_;
         LeaderAccelerationModel leader_model_;
         double previus_ego_accelation_;
+        double pre_step_ego_acceleration_;
 
     public:
         explicit Simulator() noexcept;

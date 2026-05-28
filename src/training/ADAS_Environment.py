@@ -44,10 +44,10 @@ class ADAS_Environment(gym.Env):
         return state, info
 
     def step(self, action):
-        # Map normlized action from [-1.0,1.0] to [-8.0,3.0]
+        # Map normalized action from [-1.0,1.0] to [-8.0,3.0]
         acceleration = float(-2.5 + (action[0] * 5.5))
-        reward = self.sim.calculate_reward(acceleration)
         self.sim.step(acceleration)
+        reward = self.sim.calculate_reward(acceleration)
         state = self._get_state()
         terminated = self.sim.is_terminated()
         truncated = self.sim.is_truncated()
