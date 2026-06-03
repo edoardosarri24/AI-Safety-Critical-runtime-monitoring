@@ -2,6 +2,7 @@
 #define HYPER_PARAMETERS_HPP
 
 #include <cstddef>
+#include <string_view>
 
 namespace simulation_parameter {
     inline constexpr double dt = 0.1;
@@ -16,7 +17,6 @@ namespace simulation_parameter {
 namespace physic_parameters {
     inline constexpr double MAX_ACCELLERATION = 3.0;
     inline constexpr double MIN_ACCELLERATION = -8.0;
-    inline constexpr double MAX_BRAKE = -8.0;
 }
 
 namespace data {

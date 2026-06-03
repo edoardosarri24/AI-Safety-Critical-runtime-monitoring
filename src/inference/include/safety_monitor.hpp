@@ -6,8 +6,10 @@
 
 namespace safety_monitor {
 
-    double safe_acceleration();
-    double cirtical_distance(double leader_velocity, double ego_velocity);
+    constexpr double safe_acceleration();
+    double cirtical_distance(
+        double const leader_velocity,
+        double const ego_velocity);
 
 }
 

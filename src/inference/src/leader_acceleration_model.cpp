@@ -26,7 +26,7 @@ double LeaderAccelerationModel::get_acceleration(double time, double leader_velo
         return std::clamp(raw_acceleration, physic_parameters::MIN_ACCELLERATION, physic_parameters::MAX_ACCELLERATION);
     } else if (time >= current_t_brake_ && leader_velocity > 0.0) {
         // Maximum braking force applied
-        return physic_parameters::MAX_BRAKE;
+        return physic_parameters::MIN_ACCELLERATION;
     } else {
         // Vehicle is stopped or other condition
         return 0.0;
