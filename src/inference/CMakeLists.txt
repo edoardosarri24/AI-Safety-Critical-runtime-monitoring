@@ -22,10 +22,18 @@ endif()
 # Target
 add_executable(ADAS_RTA)
 
+# Path
+find_path(ONNXRUNTIME_INCLUDE_DIR NAMES onnxruntime/onnxruntime_cxx_api.h PATHS /opt/homebrew/include /usr/local/include)
+find_library(ONNXRUNTIME_LIBRARY NAMES onnxruntime PATHS /opt/homebrew/lib /usr/local/lib)
+if(NOT ONNXRUNTIME_INCLUDE_DIR OR NOT ONNXRUNTIME_LIBRARY)
+    message(FATAL_ERROR "ONNX Runtime not found! Please install it (e.g. 'brew install onnxruntime').")
+endif()
+
 # Includes
 target_include_directories(ADAS_RTA PRIVATE
     include
     ${CMAKE_CURRENT_BINARY_DIR}/include
+    ${ONNXRUNTIME_INCLUDE_DIR}
 )
 
 # Sources
@@ -40,6 +48,8 @@ target_sources(ADAS_RTA PRIVATE
     src/main.cpp
     ${COMMON_SOURCES}
 )
+
+target_link_libraries(ADAS_RTA PRIVATE ${ONNXRUNTIME_LIBRARY})
 
 # Dependencies
 find_package(pybind11 REQUIRED)
