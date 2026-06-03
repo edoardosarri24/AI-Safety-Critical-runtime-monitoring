@@ -45,6 +45,7 @@ set(COMMON_SOURCES
     src/sampler/acceleration_sampler.cpp
     src/leader_acceleration_predictor.cpp
     src/safety_monitor.cpp
+    src/statistics_collector.cpp
 )
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp

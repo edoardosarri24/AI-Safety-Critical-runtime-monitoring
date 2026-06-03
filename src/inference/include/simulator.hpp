@@ -19,7 +19,7 @@ class Simulator {
         double pre_step_ego_acceleration_;
 
     public:
-        explicit Simulator() noexcept;
+        explicit Simulator() noexcept = default;
         Simulator (const Simulator&) = delete;
         Simulator& operator=(const Simulator&) = delete;
         void reset() noexcept;
