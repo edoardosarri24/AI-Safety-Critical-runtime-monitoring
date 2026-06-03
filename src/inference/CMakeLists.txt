@@ -43,6 +43,7 @@ set(COMMON_SOURCES
     src/sampler/sampler.cpp
     src/sampler/initial_state_sampler.cpp
     src/sampler/acceleration_sampler.cpp
+    src/leader_acceleration_predictor.cpp
 )
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp
