@@ -46,7 +46,7 @@ void StatisticsCollector::generate_pdf_report() const {
     }
     csv_file.close();
     // Generation of PDF.
-    int result = std::system("uv run src/inference/src/generate_pdf.py");
+    int result = std::system("uv run src/inference/src/generate_results_pdf.py");
     if (result != 0) {
         std::cerr << "Error: generation PDF report. Be sure that 'uv' is installated.\n";
     } else {
