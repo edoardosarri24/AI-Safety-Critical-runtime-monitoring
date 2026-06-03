@@ -12,6 +12,7 @@ PYBIND11_MODULE(simulator_cpp, m) {
         .def("get_ego_velocity", &Simulator::get_ego_velocity)
         .def("get_distance", &Simulator::get_distance)
         .def("get_relative_velocity", &Simulator::get_relative_velocity)
+        .def("get_time", &Simulator::get_time)
         .def("is_terminated", &Simulator::is_terminated)
         .def("is_truncated", &Simulator::is_truncated)
         .def("calculate_reward", &Simulator::calculate_reward);

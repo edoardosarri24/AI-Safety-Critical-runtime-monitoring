@@ -27,6 +27,7 @@ class Simulator {
         double get_ego_velocity() const noexcept {return ego_velocity_;};
         double get_distance() const noexcept {return distance_;};
         double get_relative_velocity() const noexcept {return relative_velocity_;};
+        double get_time() const noexcept {return current_time_;};
         bool is_terminated() const noexcept;
         bool is_truncated() const noexcept;
         double calculate_reward(double ego_acceleration) const noexcept;

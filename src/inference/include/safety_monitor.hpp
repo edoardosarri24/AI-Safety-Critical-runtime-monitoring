@@ -6,9 +6,10 @@
 
 namespace safety_monitor {
 
-    inline constexpr double safety_monitor::safe_acceleration() {
+    inline constexpr double safe_acceleration() {
         return physic_parameters::MIN_ACCELLERATION;
     }
+
     double cirtical_distance(
         double const leader_velocity,
         double const ego_velocity);

@@ -44,6 +44,7 @@ set(COMMON_SOURCES
     src/sampler/initial_state_sampler.cpp
     src/sampler/acceleration_sampler.cpp
     src/leader_acceleration_predictor.cpp
+    src/safety_monitor.cpp
 )
 target_sources(ADAS_RTA PRIVATE
     src/main.cpp
@@ -57,7 +58,6 @@ find_package(pybind11 REQUIRED)
 pybind11_add_module(simulator_cpp
     src/bindings.cpp
     ${COMMON_SOURCES}
-    src/safety_monitor.cpp
 )
 target_include_directories(simulator_cpp PRIVATE
     include
