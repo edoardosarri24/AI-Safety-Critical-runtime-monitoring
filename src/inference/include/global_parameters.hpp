@@ -19,4 +19,9 @@ namespace physic_parameters {
     inline constexpr double MAX_BRAKE = -8.0;
 }
 
+namespace data {
+    inline constexpr std::string_view MODEL_PATH
+        = "data/adas_model.onnx";
+}
+
 #endif // HYPER_PARAMETERS_HPP

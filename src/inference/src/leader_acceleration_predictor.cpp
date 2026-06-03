@@ -1,14 +1,11 @@
 #include <onnxruntime/onnxruntime_cxx_api.h>
 #include <algorithm>
 #include "leader_acceleration_predictor.hpp"
-
-namespace {
-    constexpr inline std::string_view MODEL_PATH = "data/adas_model.onnx";
-}
+#include "global_parameters.hpp"
 
 Leader_acceleration_predictor::Leader_acceleration_predictor() :
         env_(ORT_LOGGING_LEVEL_WARNING, "ADAS_Inference"),
-        session_(env_, MODEL_PATH.data(), Ort::SessionOptions{nullptr}) {
+        session_(env_, data::MODEL_PATH.data(), Ort::SessionOptions{nullptr}) {
     input_names_ = {"input"};
     output_names_ = {"acceleration"};
 }

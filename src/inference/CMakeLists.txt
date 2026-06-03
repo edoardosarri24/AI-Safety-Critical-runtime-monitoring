@@ -57,6 +57,7 @@ find_package(pybind11 REQUIRED)
 pybind11_add_module(simulator_cpp
     src/bindings.cpp
     ${COMMON_SOURCES}
+    src/safety_monitor.cpp
 )
 target_include_directories(simulator_cpp PRIVATE
     include
