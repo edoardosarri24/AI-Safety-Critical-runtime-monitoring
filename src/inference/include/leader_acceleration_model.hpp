@@ -14,7 +14,7 @@ class LeaderAccelerationModel {
         double current_t_brake_;
 
     public:
-        explicit LeaderAccelerationModel() noexcept = default;
+        explicit LeaderAccelerationModel() noexcept;
         void reset() noexcept;
         double get_acceleration(double time, double leader_velocity) const noexcept;
 };

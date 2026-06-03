@@ -15,21 +15,7 @@ void StatisticsCollector::record_step(
         double leader_velocity,
         double acceleration,
         bool rta_active) {
-    // Total metrics
-    total_ticks_++;
-    if (rta_active) {
-        safety_monitor_calls_++;
-    } else {
-        ai_calls_++;
-    }
-    // Distance metrics
-    min_distance_ = std::min(min_distance_, distance);
-    max_distance_ = std::max(max_distance_, distance);
-    sum_distance_ += distance;
-    // Velocity metrics
-    max_ego_velocity_ = std::max(max_ego_velocity_, ego_velocity);
-    sum_ego_velocity_ += ego_velocity;
-    // Record telemetry entry
+    // Store the metrics.
     telemetries_.push_back({
         time,
         distance,
@@ -39,11 +25,6 @@ void StatisticsCollector::record_step(
         acceleration,
         rta_active
     });
-    // Comfort metrics (jerk approximation: change in acceleration)
-    if (total_ticks_ > 1) {
-        total_comfort_jerk_ += std::abs(acceleration - last_acceleration_);
-    }
-    last_acceleration_ = acceleration;
 }
 
 void StatisticsCollector::generate_pdf_report() const {
@@ -65,7 +46,6 @@ void StatisticsCollector::generate_pdf_report() const {
     }
     csv_file.close();
     // Generation of PDF.
-    std::cout << "PDF report generation...\n";
     int result = std::system("uv run src/inference/src/generate_pdf.py");
     if (result != 0) {
         std::cerr << "Error: generation PDF report. Be sure that 'uv' is installated.\n";

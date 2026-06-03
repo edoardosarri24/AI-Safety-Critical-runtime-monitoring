@@ -12,7 +12,7 @@ class Leader_acceleration_predictor {
         std::vector<const char*> output_names_;
 
     public:
-        Leader_acceleration_predictor() noexcept = default;
+        Leader_acceleration_predictor() noexcept;
         float predict(float ego_velocity, float distance, float relative_velocity);
 
 };

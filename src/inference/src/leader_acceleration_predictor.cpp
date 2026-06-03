@@ -3,7 +3,7 @@
 #include "leader_acceleration_predictor.hpp"
 #include "global_parameters.hpp"
 
-Leader_acceleration_predictor::Leader_acceleration_predictor() :
+Leader_acceleration_predictor::Leader_acceleration_predictor() noexcept :
         env_(ORT_LOGGING_LEVEL_WARNING, "ADAS_Inference"),
         session_(env_, data::MODEL_PATH.data(), Ort::SessionOptions{nullptr}) {
     input_names_ = {"input"};
