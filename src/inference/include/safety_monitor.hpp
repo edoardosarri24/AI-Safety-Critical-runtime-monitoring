@@ -10,7 +10,7 @@ namespace safety_monitor {
         return physic_parameters::MIN_ACCELLERATION;
     }
 
-    double cirtical_distance(
+    double critical_distance(
         double const leader_velocity,
         double const ego_velocity);
 

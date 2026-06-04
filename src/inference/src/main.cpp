@@ -19,10 +19,10 @@ int main() {
         double ego_velocity = simulator.get_ego_velocity();
         double relative_velocity = simulator.get_relative_velocity();
         double leader_velocity = ego_velocity + relative_velocity;
-        double critical_distance = safety_monitor::cirtical_distance(leader_velocity, ego_velocity);
+        double critical_distance = safety_monitor::critical_distance(leader_velocity, ego_velocity);
         double actual_distance = simulator.get_distance();
 
-        // Control and action
+        // Control and next action
         bool rta_active = (actual_distance <= critical_distance);
         double action = 0.0;
         if (rta_active) {
@@ -34,15 +34,20 @@ int main() {
                 static_cast<float>(relative_velocity)
             ));
         }
-
-        // Step
         simulator.step(action);
+
+        // Collection
+        double post_ego_velocity = simulator.get_ego_velocity();
+        double post_relative_velocity = simulator.get_relative_velocity();
+        double post_leader_velocity = post_ego_velocity + post_relative_velocity;
+        double post_critical_distance = safety_monitor::critical_distance(post_leader_velocity, post_ego_velocity);
+
         collector.record_step(
             simulator.get_time(),
-            actual_distance,
-            critical_distance,
-            ego_velocity,
-            leader_velocity,
+            simulator.get_distance(),
+            post_critical_distance,
+            post_ego_velocity,
+            post_leader_velocity,
             action,
             rta_active);
     }
