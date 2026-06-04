@@ -6,9 +6,11 @@ You can see the slides in [slides.pdf](slides.pdf) file.
 
 # Requirements
 The project use both Python and C++, so the dependencies are:
-
-
-
+- **C++17 compiler** and **CMake**.
+- **ONNX Runtime**.
+- **pybind11**.
+- **Python** (>= 3.9)
+- **uv**
 
 # Quick Start
 Follow these instructions in order to replicate the training and the inference. All commands, contained in `exec/` directory, should be executed from the project root directory.
