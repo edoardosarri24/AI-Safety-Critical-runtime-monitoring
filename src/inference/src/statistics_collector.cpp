@@ -29,9 +29,9 @@ void StatisticsCollector::record_step(
 
 void StatisticsCollector::generate_pdf_report() const {
     // Write temporary file.
-    std::ofstream csv_file(data::RESULTS_PATH.data());
+    std::ofstream csv_file(data::TEMP_CSV_PATH.data());
     if (!csv_file.is_open()) {
-        std::cerr << "Error: Crafting the temporary file " << data::RESULTS_PATH.data() << "\n";
+        std::cerr << "Error: Crafting the temporary file " << data::TEMP_CSV_PATH.data() << "\n";
         return;
     }
     csv_file << "time,distance,critical_distance,ego_velocity,leader_velocity,acceleration,rta_active\n";
@@ -50,8 +50,8 @@ void StatisticsCollector::generate_pdf_report() const {
     if (result != 0) {
         std::cerr << "Error: generation PDF report. Be sure that 'uv' is installated.\n";
     } else {
-        std::cout << "PDF report saved in" << data::RESULTS_PATH.data() << " \n";
+        std::cout << "PDF report saved in " << data::RESULTS_PDF_PATH.data() << " \n";
     }
     // Remove temporary file
-    std::remove(data::RESULTS_PATH.data());
+    std::remove(data::TEMP_CSV_PATH.data());
 }

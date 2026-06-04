@@ -51,18 +51,9 @@ int main() {
             action,
             rta_active);
     }
-
-    // Result.
-    if (simulator.get_distance() <= 0.0) {
-        std::cout << "Result: Collision detected: distance <= 0)\n";
-    } else if (simulator.get_distance() >= 50.0) {
-        std::cout << "Result: Recovery necessary (Leader vehicle lost, d >= 50m)\n";
-    } else {
-        std::cout << "Result: Simulation completed sucessfully\n";
-    }
-
-    // Report generation.
+    
+    // Results.
     collector.generate_pdf_report();
-
     return 0;
+
 }

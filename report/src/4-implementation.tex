@@ -1,6 +1,22 @@
 \chapter{Implementation}
 In Chapter~\ref{chap:RTA} we have seen the theory behind the RunTime Assurance. In this Chapter we will try to implement something that is related with this and that follow the idea of the runtime monitoring.
 
+In this chapter we present all the informations to understein and to go into detail of the activity diagram in Figure~\ref{fig:implementation:activity_diagram} and the sequence diagram in Figure~\ref{fig:implementation:sequence_diagram}.
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[max width=.75\textwidth, max height=0.85\textheight, keepaspectratio]{images/4-implementation/diagrams/activity_diagram.pdf}
+    \caption{Activity Diagram}
+    \label{fig:implementation:activity_diagram}
+\end{figure}
+
+\begin{figure}[htbp]
+    \centering
+    \includegraphics[max width=.75\textwidth, max height=0.85\textheight, keepaspectratio]{images/4-implementation/diagrams/sequence_diagram.pdf}
+    \caption{Sequence diagram.}
+    \label{fig:implementation:sequence_diagram}
+\end{figure}
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Scenario}
 The objective is to implement a safety-critical Advanced Driver Assistance System (ADAS) using the RTA pattern. The idea is that the Ego is managed by the AI Module until if fail; if and when the AI fail the safety module that the control and apply a safety behavior implemented in the recoverty function.
@@ -17,7 +33,6 @@ This scenrio is based on two component:
 %%%%%%%%%%%%%%
 \subsection{Acceleration Function}
 The idea behind the acceration function $a_L(t)$ is the following: we want a continuos and differentiable function; is the function is deterministic episode by episode the agent only learn the current pattern. So we have to defined a function in order to have an accelation deterministic during the single episode, but non deterministic episode by episode.
-
 
 The function can so be described as
 \begin{equation}
@@ -134,8 +149,8 @@ For the inference the neural network will be embedded in the system with the \te
 \subsection{Reward Function}
 The reward function in usually the most critical part in RL. In this case we want provide both a safety and confort behavoir and so we can describe the reward function as $R_t=R_{distance}+R_{comfort}+R_{penalty}$, where:
 \begin{itemize}
-    \item $R_{distance}=-\alpha|d(t)-d_{target}|$, where $d_{target}=10\ m$.
-    \item $R_{comfort}=-\beta |a_E(t-1)-a_E(t)|$. We want penalize sudden break.
+    \item $R_{distance}=-\alpha|d(t)-d_{target}|$, where $d_{target}=10\ m$, where $\alpha = 1$
+    \item $R_{comfort}=-\beta |a_E(t-1)-a_E(t)|$. We want penalize sudden break, where $\beta = 0.9$.
     \item $R_{penalty}$ represent the entering of the agent in the critical zone, so if $d_{critical}<d(t)<0$. It's defined as $R_{penalty} = \begin{cases} -20 & \text{if } d(t) \le d_{critical} \\ 0 & \text{otherwise} \end{cases}$.
 \end{itemize}
 We immidiatly return a reward of $R_{terminal}=-1000$ if $d(t)\le0$ or if $d(t)>d_{max}=50\, m$. In both cases, the episode is immediately terminated.
@@ -148,9 +163,9 @@ The episode doesn't terminate when $d(t) \le d_{\text{critical}}$. Instead, the 
     \item Timeout: The episode reaches its maximum duration of $30\,\text{s}$.
 \end{itemize}
 
-%%%%%%%%%%%%%%
-\subsection{Value}
-\begin{itemize}
-    \item $\alpha = 1$
-    \item $\beta = 0.9$
-\end{itemize}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Results}
+In this Section we append some result report: 
+\includepdf{images/4-implementation/results/success.pdf}
+\includepdf{images/4-implementation/results/collision.pdf}
+\includepdf{images/4-implementation/results/leader_lost.pdf}

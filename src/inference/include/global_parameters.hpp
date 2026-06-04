@@ -22,8 +22,10 @@ namespace physic_parameters {
 namespace data {
     inline constexpr std::string_view MODEL_PATH
         = "data/adas_model.onnx";
-    inline constexpr std::string_view RESULTS_PATH
+    inline constexpr std::string_view TEMP_CSV_PATH
         = "data/telemetry.csv";
+    inline constexpr std::string_view RESULTS_PDF_PATH
+        = "data/simulation_results.pdf";
 }
 
 #endif // HYPER_PARAMETERS_HPP

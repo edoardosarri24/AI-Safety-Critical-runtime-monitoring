@@ -1,0 +1,25 @@
+---
+references:
+  - "File: /src/inference/src/main.cpp"
+generationTime: 2026-06-04T12:39:32.777Z
+---
+flowchart TD
+    Start["Start main()"] --> Init["Initialize Simulator, Predictor"]
+    Init --> LoopCond{"Simulator terminated or truncated?"}
+    LoopCond -->|No| Sensor["Read from sensors"]
+    Sensor --> Crit["Compute critical_distance"]
+    Crit --> Decision{"actual_distance <= critical_distance?"}
+    Decision -->|Yes| ActionRTA["Perform safety monitor action"]
+    Decision -->|No| ActionPred["Perform AI module action"]
+    ActionRTA --> Record["Collect data"]
+    ActionPred --> Record
+    Record --> LoopCond
+    LoopCond -->|Yes| ResultCond{"Distance <= 0?"}
+    ResultCond -->|Yes| Collision["Collision detected"]
+    ResultCond -->|No| RecoveryCond{"Distance >= 50.0?"}
+    RecoveryCond -->|Yes| Recovery["Target lost"]
+    RecoveryCond -->|No| Success["Simulation completed successfully"]
+    Collision --> Report["Generate report"]
+    Recovery --> Report
+    Success --> Report
+    Report --> End["Return"]
