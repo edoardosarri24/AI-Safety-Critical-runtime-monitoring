@@ -1,12 +1,12 @@
 \chapter{Runtime Monitoring}
 \label{chap:RTA}
-As we have described in Section~\ref{sec:runtime} that there's a notable class of system, named as runtime, that are able to handle the complexity and the non compliance with the safety standard of its own AI models. These system rely their management of their complex algorithms on different solutions, one of which is known as runtime monitoring. In this scenario one of the main challenge is to obtain a certification when within the system is present a module that doesn't have a deteministic behavior, that is very complex to handle in a formal way and that can be produce some undetectable fault in the system.
+As described in Section~\ref{sec:runtime}, there is a notable class of systems, referred to as runtime, which are able to handle the complexity and non-compliance of their AI models with safety standards. These systems rely on different solutions to manage their complex algorithms, one of which is known as runtime monitoring. In this scenario, one of the main challenges is to obtain certification when a module is present within the system that does not have deterministic behavior, is very complex to handle in a formal way, and can produce undetectable faults in the system.
 
-One of the most practical solution to solve this problem is the \textit{runtime assurance} (RTA): we don't try to make compliance the complex module, but instead we want to predict a fault behavior of it and in this case switch to a safe module. This apporach has a high modularity: once we have obtain the certification for the whole system, we can change the AI modul without problems, because if it fails the safe fuction enter in action. Another interesting point is that that this solution cane be applies at every system level (e.g., flight controller and actuation system)~\cite{nagarajan2021astm}.
+One of the most practical solutions to this problem is \textit{runtime assurance} (RTA): we do not try to make the complex module compliant, but instead we want to predict its faulty behavior and, in this case, switch to a safe module. This approach has high modularity: once we have obtained certification for the whole system, we can change the AI module without problems, because if it fails, the safe function enters into action. Another interesting point is that this solution can be applied at any system level (e.g., flight controller and actuation system)~\cite{nagarajan2021astm}.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Architecture}
-The idea that we described in the introduction of this Chapter, is formalized in the \textit{ASTM F3269-17} stardard (the last versione is the F3269-21, but it's to purchase). In 2017 the Advancing Standards Transforming Market (ASTM) has published a guide line to implement this behavior on unmanned airceaft system. The Figure\ref{fig:RTA_architecture} show us a schema of the architecture that was proposed.
+The idea we described in the introduction of this chapter is formalized in the \textit{ASTM F3269-17} standard (the latest version is F3269-21, but it must be purchased). In 2017, the Advancing Standards Transforming Market (ASTM) published a guideline to implement this behavior on unmanned aircraft systems. Figure~\ref{fig:RTA_architecture} shows a diagram of the proposed architecture.
 \begin{figure}[htbp]
     \centering
     \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/RTA_architecture.pdf}
@@ -16,18 +16,18 @@ The idea that we described in the introduction of this Chapter, is formalized in
 
 \myskip
 
-Let's see some terms that are usefull to known:
+Let's see some terms that are useful to know:
 \begin{itemize}
     \item \textbf{Data} \\
-        Onviusually the data are the informations that will be treated by the system. These data can be both assered and unassured: in the first case we are reffering to the data that can be use directly from the system; in the second one we are referring to the data that must be validate throught the \textbf{Input Manager}.
+        Obviously, data is the information that will be processed by the system. These data can be both assured and unassured: in the first case, we are referring to data that can be used directly by the system; in the second one, we are referring to data that must be validated through the \textbf{Input Manager}.
     \item \textbf{Complex Function} \\
-        Is the module that cannot be certificated, usually an AI module. This AI component is composed by a data pre-processing, inference and post-processing; furthermore this componet can be implement with some degree of redundancy, with a voter at the end~\cite{abella2025safexplain}.
+        This is the module that cannot be certified, usually an AI module. This AI component is composed of data pre-processing, inference, and post-processing; furthermore, this component can be implemented with some degree of redundancy, with a voter at the end~\cite{abella2025safexplain}.
     \item \textbf{Recovery Function} \\
-    It's an assured function that generate a bounded output to mantain the system in a safe state if the Complex Function fails.
+        It is an assured function that generates a bounded output to maintain the system in a safe state if the Complex Function fails.
     \item \textbf{Safety Monitor} \\
-        The assured function that is responsable to detect the fault behavior and send the command to the Switch. This module can observes both the RTA system and the Complex Function; this choice depend on the use case. This Monitor can perform the analysis on the AI module also in a hierarchical way (see Figure~\ref{fig:monitor:hierarchical_checker}): the low level monitor checks for evident error (e.g., out of distribution value) and the high level monitor checks for more semantics error~\cite{abella2025safexplain}.
+        The assured function that is responsible for detecting faulty behavior and sending commands to the Switch. This module can observe both the RTA system and the Complex Function; this choice depends on the use case. This monitor can also perform the analysis on the AI module in a hierarchical way (see Figure~\ref{fig:monitor:hierarchical_checker}): the low-level monitor checks for evident errors (e.g., out-of-distribution values) and the high-level monitor checks for more semantic errors~\cite{abella2025safexplain}.
     \item \textbf{Switch} \\
-        An assered fuction that recive the command of switching from the Safety Monitor and switch to the Recovery Function.
+        An assured function that receives the switching command from the Safety Monitor and switches to the Recovery Function.
 \end{itemize}
 \begin{figure}[htbp]
     \centering
@@ -38,7 +38,7 @@ Let's see some terms that are usefull to known:
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Coverage}
-The coverage consept is foundamental to make working the RTA system. We start from the operative scope of the Complex Function, i.e. from the boundary of the "functionality" that the Complex Function implements. This scope is analyze from a point of view of all combination of Safety Monitor and Recovery Function (see Figure~\ref{fig:monitoring:coverage_gap}): for each operation point (i.e., functionality) of the scope there must be a monitor capable to detecting the Complex Function fail and a REcovery Function that maintains the system in a safe state.
+The coverage concept is fundamental to make the RTA system work. We start from the operational scope of the Complex Function, i.e., from the boundary of the functionality that the Complex Function implements. This scope is analyzed from the viewpoint of all combinations of Safety Monitors and Recovery Functions (see Figure~\ref{fig:monitoring:coverage_gap}): for each operating point (i.e., functionality) of the scope, there must be a monitor capable of detecting the Complex Function's failure and a Recovery Function that maintains the system in a safe state.
 \begin{figure}[htbp]
     \centering
     \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/coverage_gap.pdf}
@@ -46,7 +46,7 @@ The coverage consept is foundamental to make working the RTA system. We start fr
     \label{fig:monitoring:coverage_gap}
 \end{figure}
 
-This concept of coverage brings us to have multiple Monitor where each of them have its own Recovery Function. The choice of which Monitor, and its relative Recovery Function is performed by a voter, and so we have an architecture similar to that one shown in Figure~\ref{fig:monitor:monitors_voter}.
+This concept of coverage leads us to have multiple monitors, where each of them has its own Recovery Function. The choice of which monitor and its relative Recovery Function is performed by a voter, resulting in an architecture similar to the one shown in Figure~\ref{fig:monitor:monitors_voter}.
 \begin{figure}[htbp]
     \centering
     \includegraphics[max width=\textwidth, max height=.85\textheight, keepaspectratio]{images/3-monitoring/monitors_voter.pdf}
