@@ -25,10 +25,24 @@ def generate_pdf():
         exit(1)
     df = pd.read_csv(csv_path)
 
+    # Retrives the max distance parameter.
+    try:
+        headeglobal_parameters_path = 'src/inference/include/global_parameters.hpp'
+        if os.path.exists(headeglobal_parameters_path):
+            with open(headeglobal_parameters_path, 'r') as file:
+                for line in file:
+                    if 'MAX_DISTANCE' in line and '=' in line:
+                        val_str = line.split('=')[1].replace(';', '').strip()
+                        max_distance = float(val_str)
+                        break
+    except Exception:
+        exit(1)
+
     # Distance Plot
     plt.figure(figsize=(6.5, 3))
     plt.plot(df['time'], df['distance'], label='Real Distance', color='#1f77b4', linewidth=2)
     plt.plot(df['time'], df['critical_distance'], label='Critical Distance', color='#d62728', linestyle='--', linewidth=1.5)
+    plt.axhline(y=max_distance, label='Maximum Distance', color='#d62728', linestyle=':', linewidth=1.5)
     # Highlight RTA active zones
     rta_active = False
     start_time = 0
@@ -79,7 +93,7 @@ def generate_pdf():
     final_distance = df['distance'].iloc[-1]
     if final_distance <= 0.0:
         outcome = "Collision detected!"
-    elif final_distance >= 50.0:
+    elif final_distance >= max_distance:
         outcome = "Leader vehicle lost (tracking failed)!"
     else:
         outcome = "Simulation completed sucessfully!"
