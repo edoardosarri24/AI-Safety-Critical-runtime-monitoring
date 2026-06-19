@@ -1,5 +1,7 @@
 #include "simulator.hpp"
 #include "global_parameters.hpp"
+#include "safety_monitor.hpp"
+#include <algorithm>
 
 Simulator::Simulator() noexcept :
         state_sampler_(),
@@ -54,7 +56,7 @@ bool Simulator::is_truncated() const noexcept {
 
 double Simulator::calculate_reward(double ego_acceleration) const noexcept {
         double leader_velocity = ego_velocity_ + relative_velocity_;
-        double critical_distance = ego_velocity_ * simulation_parameter::dt + (std::pow(ego_velocity_,2)-std::pow(leader_velocity,2)) / (2*std::abs(physic_parameters::MIN_ACCELLERATION));
+        double critical_distance = safety_monitor::critical_distance(leader_velocity, ego_velocity_);
         if (distance_ <= 0.0 || distance_ >= simulation_parameter::MAX_DISTANCE)
                 return -1000.0;
         double distance_from_target = std::abs(distance_ - simulation_parameter::TARGET_DISTANCE);

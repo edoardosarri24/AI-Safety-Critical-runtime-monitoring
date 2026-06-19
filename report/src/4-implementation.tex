@@ -120,7 +120,7 @@ Since we have to predict a function, the neural network is a Multi-Layer Percept
 \subsection{Safety Monitor}
 This is the deterministic and assured module that takes control of the Ego car in case of AI failure. It computes the minimum distance that should be maintained between the two cars in the situation where the Leader brakes with maximum power. This safety distance can be defined as
 \begin{equation}
-    d_{critical} = v_E(t) \cdot \Delta t + \frac{v_E(t)^2 - v_L(t)^2}{2\cdot |a_{\text{max\_brake}}|},
+    d_{critical} = \max\left(0, v_E(t) \cdot \Delta t + \frac{v_E(t)^2 - v_L(t)^2}{2\cdot |a_{\text{max\_brake}}|}\right),
 \end{equation}
 where $v_E(t)\cdot \Delta t$ is the reaction time of the system, which is necessary because the braking phase does not start immediately but only after $\Delta t$ ticks; $v_L(t)=v_{rel}(t)+v_E(t)$; and $a_{\text{max\_brake}}=-8.0$.
 
@@ -152,7 +152,7 @@ The reward function is usually the most critical part in RL. In this case, we wa
 \begin{itemize}
     \item $R_{distance}=-\alpha|d(t)-d_{target}|$, where $d_{target}=10\,\text{m}$, with $\alpha = 1$.
     \item $R_{comfort}=-\beta |a_E(t-1)-a_E(t)|$, where we want to penalize sudden braking, with $\beta = 0.9$.
-    \item $R_{penalty}$ represents the agent entering the critical zone, i.e., if $d_{critical}<d(t)<0$. It is defined as $R_{penalty} = \begin{cases} -20 & \text{if } d(t) \le d_{critical} \\ 0 & \text{otherwise} \end{cases}$.
+    \item $R_{penalty}$ represents the agent entering the critical zone, i.e., if $d(t) \le d_{critical}$. It is defined as $R_{penalty} = \begin{cases} -20 & \text{if } d(t) \le d_{critical} \\ 0 & \text{otherwise} \end{cases}$.
 \end{itemize}
 We immediately return a reward of $R_{\text{terminal}}=-1000$ if $d(t)\le0$ or if $d(t)>d_{max}=50\,\text{m}$. In both cases, the episode is immediately terminated.
 
