@@ -2,71 +2,66 @@
 
 \subsection{Resiliency Real-Time and Certification}
 
-\begin{frame}{Runtime Monitoring - Runtime Assurance (RTA)}
+\begin{frame}{Runtime Monitoring}
     \begin{block}{Runtime Assurance (RTA)}
+        Runtime Assurance (RTA) system is able to handle the complexity of AI model without handle it directly.
         \begin{itemize}
-            \item \textbf{Concept:} Instead of trying to certify a highly complex or non-deterministic AI module, we wrap it in a monitor that switches to an assured recovery function upon predicting a failure.
-            \item \textbf{Modularity:} The system remains certified even if the AI module is modified or replaced, because safety is guaranteed by the assured recovery module.
-            \item \textbf{Versatility:} Can be applied at any level of the system architecture (e.g., controllers, actuators).
+            \item \textbf{Concept:} Instead of trying to certify a highly complex or non-deterministic AI module, we can wrap it in a runtime monitor (i.e., a runtime checker) that switches to an assured recovery function if it recognises a failure.
+            \item \textbf{Modularity:} The system remains certified even if we totally change the AI model: the certification is not based on the quality of AI.
+            \item \textbf{Versatility:} Can be applied at any system level (e.g., controllers, actuators) and with one monitor for each SIS.
         \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{Runtime Monitoring - RTA Architecture}
-    \begin{columns}
-        \begin{column}{.48\textwidth}
-            \begin{block}{ASTM F3269-17 Standard}
-                Formalized architecture for unmanned aircraft systems:
-                \begin{itemize}
-                    \item \textbf{Input Manager:} Validates unassured data.
-                    \item \textbf{Complex Function:} Untrusted AI module performing the main task.
-                    \item \textbf{Recovery Function:} Assured module that maintains a safe state.
-                    \item \textbf{Safety Monitor:} Assured module that detects failures.
-                    \item \textbf{Switch:} Assured routing.
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{.52\textwidth}
-            QUI IMMAGINE RTA-architecture
-        \end{column}
-    \end{columns}
+\begin{frame}{Runtime Monitoring - Architectures}
+    \centering
+    \includegraphics[width=.85\textwidth]{images/3-monitoring/RTA_architecture.pdf}
 \end{frame}
 
-\begin{frame}{Runtime Monitoring - Hierarchical Safety Monitor}
-    \begin{columns}
-        \begin{column}{.52\textwidth}
-            \begin{block}{Hierarchical Checking}
-                The monitor can analyze the AI module hierarchically to improve safety:
-                \begin{itemize}
-                    \item \textbf{Low-Level Monitor:} Checks for evident, immediate errors (e.g., out-of-distribution inputs, syntax, range checks).
-                    \item \textbf{High-Level Monitor:} Checks for semantic, functional, and physical constraints.
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{.48\textwidth}
-            QUI IMMAGINE hierarchical-checker
-        \end{column}
-    \end{columns}
+\begin{frame}{Runtime Monitoring - Architectures}
+    \centering
+    \includegraphics[width=.4\textwidth]{images/3-monitoring/RTA_architecture.pdf}
+    \vfill
+    \begin{block}{Input Manager}
+        Validates unassured data. These data can derive both from AI model and from the extern.
+    \end{block}
+    \begin{block}{Complex Function}
+        Untrusted AI module that perform the SIS.
+    \end{block}
 \end{frame}
 
-\begin{frame}{Runtime Monitoring - Coverage and Voter Architecture}
+\begin{frame}{Runtime Monitoring - Architectures}
+    \centering
+    \includegraphics[width=.4\textwidth]{images/3-monitoring/RTA_architecture.pdf}
+    \vfill
+    \begin{block}{Recovery Function}
+        Assured module that perform the SIS.
+    \end{block}
+    \begin{block}{Safety Monitor}
+        Assured module that detects AI failures.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Runtime Monitoring - Architectures}
+    \centering
+    \includegraphics[width=.4\textwidth]{images/3-monitoring/RTA_architecture.pdf}
+    \vfill
+    \begin{block}{Switch}
+        Assured routing from AI to recovery function.
+    \end{block}
+\end{frame}
+
+\begin{frame}{Runtime - KooN}
+    In the case of very complex function, one monitor cannot cover all possibile failure and is mandatory the usage of multiple monitor.
+    \vfill
     \begin{columns}
-        \begin{column}{.52\textwidth}
-            \begin{block}{Coverage Scope}
-                \begin{itemize}
-                    \item \textbf{Operating Scope:} The domain of the complex function.
-                    \item \textbf{Coverage Gap:} Any state where a failure cannot be detected or recovered (QUI IMMAGINE coverage-gap).
-                \end{itemize}
-            \end{block}
-            \begin{block}{Multi-Monitor Voter}
-                \begin{itemize}
-                    \item Multiple monitors, each with a corresponding recovery function.
-                    \item A voter chooses which monitor's recovery function to execute.
-                \end{itemize}
-            \end{block}
+        \begin{column}{.5\textwidth}
+            \centering
+            \includegraphics[width=\textwidth]{images/3-monitoring/RTA_architecture.pdf}
         \end{column}
-        \begin{column}{.48\textwidth}
-            QUI IMMAGINE monitors-voter
+        \begin{column}{.5\textwidth}
+            \centering
+            \includegraphics[width=.75\textwidth]{images/3-monitoring/monitors_voter.pdf}
         \end{column}
     \end{columns}
 \end{frame}

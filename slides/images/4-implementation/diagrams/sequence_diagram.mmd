@@ -1,0 +1,58 @@
+---
+references:
+  - "File: /src/inference/src/main.cpp"
+generationTime: 2026-06-04T12:38:11.327Z
+---
+sequenceDiagram
+    participant Main
+    participant Simulator
+    participant SafetyMonitor as safety_monitor
+    participant Predictor as leader_acceleration_predictor
+    participant Collector as statistics_collector
+    participant Console
+
+    %% Init
+    Main->>Simulator: init()
+    activate Simulator
+    Main->>Predictor: init()
+    activate Predictor
+    Main->>Collector: init()
+    activate Collector
+
+
+    loop while !simulator.is_terminated() && !simulator.is_truncated()
+        activate SafetyMonitor
+        %% Read
+        Main->>Simulator: read_from_sensor()
+        Simulator-->>Main: ego_velocity, relative_velocity, actual_distance
+        %% Action
+        Main->>SafetyMonitor: get_critical_distance()
+        SafetyMonitor-->>Main: critical_distance
+        alt actual_distance <= critical_distance
+            Main->>SafetyMonitor: get_safe_acceleration()
+            SafetyMonitor-->>Main: action
+        else predictor path
+            Main->>Predictor: predict_acceleration()
+            Predictor-->>Main: action
+        end
+        Main->>Simulator: step
+        %% Collector
+        Main->>Simulator: get_information()
+        Simulator-->>Main: information
+        Main->>Collector: record_information
+    end
+
+    %% Result
+    alt collision detected
+        Main->>Console: generate_pdf_report()
+    else leader lost
+        Main->>Console: generate_pdf_report()
+    else success
+        Main->>Console: generate_pdf_report()
+    end
+
+    %% Clean up
+    deactivate SafetyMonitor
+    deactivate Predictor
+    deactivate Collector
+    deactivate Simulator

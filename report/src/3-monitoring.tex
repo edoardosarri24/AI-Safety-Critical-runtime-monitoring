@@ -9,7 +9,7 @@ One of the most practical solutions to this problem is \textit{runtime assurance
 The idea we described in the introduction of this chapter is formalized in the \textit{ASTM F3269-17} standard (the latest version is F3269-21, but it must be purchased). In 2017, the Advancing Standards Transforming Market (ASTM) published a guideline to implement this behavior on unmanned aircraft systems. Figure~\ref{fig:RTA_architecture} shows a diagram of the proposed architecture.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/RTA_architecture.pdf}
+    \includegraphics[max width=.75\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/RTA_architecture.pdf}
     \caption{RTA architecture Proposed in ASTM F3269-17~\cite{nagarajan2021astm}.}
     \label{fig:RTA_architecture}
 \end{figure}
@@ -41,7 +41,7 @@ Let's see some terms that are useful to know:
 The coverage concept is fundamental to make the RTA system work. We start from the operational scope of the Complex Function, i.e., from the boundary of the functionality that the Complex Function implements. This scope is analyzed from the viewpoint of all combinations of Safety Monitors and Recovery Functions (see Figure~\ref{fig:monitoring:coverage_gap}): for each operating point (i.e., functionality) of the scope, there must be a monitor capable of detecting the Complex Function's failure and a Recovery Function that maintains the system in a safe state.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[max width=\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/coverage_gap.pdf}
+    \includegraphics[max width=.8\textwidth, max height=0.85\textheight, keepaspectratio]{images/3-monitoring/coverage_gap.pdf}
     \caption{Gap in the Monitor and the Recovery Function~\cite{nagarajan2021astm}.}
     \label{fig:monitoring:coverage_gap}
 \end{figure}
@@ -49,7 +49,7 @@ The coverage concept is fundamental to make the RTA system work. We start from t
 This concept of coverage leads us to have multiple monitors, where each of them has its own Recovery Function. The choice of which monitor and its relative Recovery Function is performed by a voter, resulting in an architecture similar to the one shown in Figure~\ref{fig:monitor:monitors_voter}.
 \begin{figure}[htbp]
     \centering
-    \includegraphics[max width=\textwidth, max height=.85\textheight, keepaspectratio]{images/3-monitoring/monitors_voter.pdf}
+    \includegraphics[max width=.8\textwidth, max height=.85\textheight, keepaspectratio]{images/3-monitoring/monitors_voter.pdf}
     \caption{Voter architecture with multiple Monitors~\cite{nagarajan2021astm}.}
     \label{fig:monitor:monitors_voter}
 \end{figure}
