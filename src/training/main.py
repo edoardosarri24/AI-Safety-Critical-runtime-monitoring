@@ -32,5 +32,5 @@ model = PPO(
 )
 
 # Compute
-model.learn(total_timesteps=10000)
+model.learn(total_timesteps=500000)
 save_model(model)
