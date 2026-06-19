@@ -1,0 +1,72 @@
+\section{Runtime Monitoring}
+
+\subsection{Resiliency Real-Time and Certification}
+
+\begin{frame}{Runtime Monitoring - Runtime Assurance (RTA)}
+    \begin{block}{Runtime Assurance (RTA)}
+        \begin{itemize}
+            \item \textbf{Concept:} Instead of trying to certify a highly complex or non-deterministic AI module, we wrap it in a monitor that switches to an assured recovery function upon predicting a failure.
+            \item \textbf{Modularity:} The system remains certified even if the AI module is modified or replaced, because safety is guaranteed by the assured recovery module.
+            \item \textbf{Versatility:} Can be applied at any level of the system architecture (e.g., controllers, actuators).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Runtime Monitoring - RTA Architecture}
+    \begin{columns}
+        \begin{column}{.48\textwidth}
+            \begin{block}{ASTM F3269-17 Standard}
+                Formalized architecture for unmanned aircraft systems:
+                \begin{itemize}
+                    \item \textbf{Input Manager:} Validates unassured data.
+                    \item \textbf{Complex Function:} Untrusted AI module performing the main task.
+                    \item \textbf{Recovery Function:} Assured module that maintains a safe state.
+                    \item \textbf{Safety Monitor:} Assured module that detects failures.
+                    \item \textbf{Switch:} Assured routing.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{.52\textwidth}
+            QUI IMMAGINE RTA-architecture
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Runtime Monitoring - Hierarchical Safety Monitor}
+    \begin{columns}
+        \begin{column}{.52\textwidth}
+            \begin{block}{Hierarchical Checking}
+                The monitor can analyze the AI module hierarchically to improve safety:
+                \begin{itemize}
+                    \item \textbf{Low-Level Monitor:} Checks for evident, immediate errors (e.g., out-of-distribution inputs, syntax, range checks).
+                    \item \textbf{High-Level Monitor:} Checks for semantic, functional, and physical constraints.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            QUI IMMAGINE hierarchical-checker
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Runtime Monitoring - Coverage and Voter Architecture}
+    \begin{columns}
+        \begin{column}{.52\textwidth}
+            \begin{block}{Coverage Scope}
+                \begin{itemize}
+                    \item \textbf{Operating Scope:} The domain of the complex function.
+                    \item \textbf{Coverage Gap:} Any state where a failure cannot be detected or recovered (QUI IMMAGINE coverage-gap).
+                \end{itemize}
+            \end{block}
+            \begin{block}{Multi-Monitor Voter}
+                \begin{itemize}
+                    \item Multiple monitors, each with a corresponding recovery function.
+                    \item A voter chooses which monitor's recovery function to execute.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            QUI IMMAGINE monitors-voter
+        \end{column}
+    \end{columns}
+\end{frame}

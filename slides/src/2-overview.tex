@@ -1,0 +1,100 @@
+\section{Overview}
+
+\subsection{Resiliency Real-Time and Certification}
+
+\begin{frame}{Overview - Literature Classification}
+    \begin{block}{Types of AI (TAI)}
+        \begin{itemize}
+            \item \textbf{Connectionists:} Optimization/gradient-based (NNs, Transformers).
+            \item \textbf{Bayesian:} Probabilistic outcomes.
+            \item \textbf{Symbolists:} Logic-based, explainable (Decision Trees, Prolog).
+            \item \textbf{Analogizers:} Similarity-based (k-NN, SVM).
+        \end{itemize}
+    \end{block}
+    \begin{block}{Automation Levels (EASA)}
+        \begin{enumerate}
+            \item \textbf{Level 1:} Collaborative robots (work side-by-side with humans).
+            \item \textbf{Level 2:} Predefined, closed environments.
+            \item \textbf{Level 3:} Autonomous, open environments (system can adapt behavior and goals without human control).
+        \end{enumerate}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Overview - Safety Standards}
+    \begin{block}{Traditional Safety Standards (SIS)}
+        \begin{itemize}
+            \item Risk mitigation via programmable functions embedded in the system.
+            \item \textbf{Measures:} SIL (IEC 61508), ASIL (ISO 26262), DAL (DO-178C).
+            \item \textbf{The Gap:} Critical levels require $10^{-9}$/h probability of failure, whereas standard AI models achieve around 99\% accuracy.
+        \end{itemize}
+    \end{block}
+    \begin{block}{AI Safety Standards}
+        \begin{itemize}
+            \item ADAS and heteronomous systems face behavior-induced failures without physical HW/SW faults.
+            \item Must comply with \textbf{SOTIF (ISO 21448)} to align with classical Functional Safety.
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Overview - Applications and ISO 5469 Classes}
+    \begin{block}{Points of Application}
+        \begin{itemize}
+            \item \textbf{Product:} AI-based safety functions trained offline and embedded.
+            \item \textbf{Runtime:} AI models that update/adapt online during execution.
+            \item \textbf{Process:} AI models used to design/develop/test the system.
+        \end{itemize}
+    \end{block}
+    \begin{block}{ISO 5469 Classes}
+        \begin{itemize}
+            \item \textbf{Class I:} Deterministic, traditional AI (symbolist) $\Rightarrow$ Formally verifiable $\Rightarrow$ Complies with traditional FuSa.
+            \item \textbf{Class II:} Non-compliant AI model monitored by a runtime checker (\textit{Safety Bag}) that makes safe fallback decisions.
+            \item \textbf{Class III:} Internal AI model cannot be verified, safety responsibility not taken by engineers (e.g., standard ADAS).
+        \end{itemize}
+    \end{block}
+\end{frame}
+
+\begin{frame}{Overview - AI-Based Safety-Critical Systems}
+    \begin{columns}
+        \begin{column}{.52\textwidth}
+            \begin{block}{Product Category}
+                \begin{itemize}
+                    \item Safety functions based on AI trained offline.
+                    \item \textbf{Testing/Assurance:}
+                    \begin{itemize}
+                        \item Uncertainty-induced failures.
+                        \item Specifications as high-level objectives rather than precise steps.
+                    \end{itemize}
+                \end{itemize}
+            \end{block}
+            \begin{block}{Neural Networks}
+                \begin{itemize}
+                    \item \textit{``Changing nothing changes everything''}.
+                    \item Iterative training in the V-Model.
+                \end{itemize}
+            \end{block}
+        \end{column}
+        \begin{column}{.48\textwidth}
+            QUI IMMAGINE AI-system-components
+        \end{column}
+    \end{columns}
+\end{frame}
+
+\begin{frame}{Overview - Runtime and Process Categories}
+    \begin{block}{Runtime Adaptation}
+        Enables safety functions to evolve (e.g. gas turbine degradation). Dependability relies on 5 techniques:
+        \begin{itemize}
+            \item \textbf{Safety Bag:} Monitor output, fall back to safe default.
+            \item \textbf{Safe/Limited Adaptation:} Safe training or restricted weight delta.
+            \item \textbf{Limited Actuation:} Output bounded by hard limits.
+            \item \textbf{Library-Based Offline:} Non-linear selection of pre-certified models.
+        \end{itemize}
+    \end{block}
+    \begin{block}{Process Category}
+        AI assisting the traditional engineering lifecycle:
+        \begin{itemize}
+            \item \textbf{Specification:} NLP models for hazard analysis.
+            \item \textbf{Design/Testing:} Code and test case generation.
+            \item \textbf{AutoML:} Reinforcement learning for hyperparameter tuning.
+        \end{itemize}
+    \end{block}
+\end{frame}
