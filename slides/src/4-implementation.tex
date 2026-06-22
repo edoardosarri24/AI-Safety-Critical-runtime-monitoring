@@ -2,26 +2,16 @@
 
 \subsection{Resiliency Real-Time and Certification}
 
-\begin{frame}{Implementation - Scenario}
-    \begin{columns}
-        \begin{column}{.52\textwidth}
-            \begin{block}{ADAS Safety-Critical Scenario}
-                \begin{itemize}
-                    \item \textbf{Ego Car (E):} Controlled by AI (PPO) or Safety Monitor.
-                    \item \textbf{Leader Car (L):} Independent vehicle ahead with unknown acceleration $a_L(t)$.
-                    \item \textbf{Safety Bag Pattern:} AI operates until $d(t) \le d_{critical}$, then Recovery Function brakes at maximum deceleration.
-                \end{itemize}
-            \end{block}
-        \end{column}
-        \begin{column}{.48\textwidth}
-            QUI IMMAGINE activity-diagram
-            \vspace{0.2cm}
-            QUI IMMAGINE sequence-diagram
-        \end{column}
-    \end{columns}
+\begin{frame}{Implementation}
+    The Advanced Driver Assistance System (ADAS) is based on:
+        \begin{itemize}
+            \item \textbf{Ego Car (E):} Controlled by AI (i.e., RL PPO algorithm) or Safety Monitor.
+            \item \textbf{Leader Car (L):} Independent vehicle ahead with unknown acceleration $a_L(t)$.
+            \item \textbf{Safety Bag Pattern:} AI operates until $d(t) \le d_{critical}$, then Recovery Function brakes at maximum deceleration.
+        \end{itemize}
 \end{frame}
 
-\begin{frame}{Implementation - Leader Behavior \& Kinematics}
+\begin{frame}{Implementation}
     \begin{block}{Stochastic Leader Acceleration}
         \begin{equation*}
             a_L(t) =
@@ -45,12 +35,12 @@
     \end{block}
 \end{frame}
 
-\begin{frame}{Implementation - State \& AI Module}
-    \begin{block}{State Space $S_t \in \mathbb{R}^3$}
+\begin{frame}{Implementation}
+    \begin{block}{State Space: $S_t \in \mathbb{R}^3$}
         \begin{itemize}
-            \item $d(t) = x_L(t) - x_E(t)$ \ (Distance from LiDAR)
-            \item $v_{rel}(t) = v_L(t) - v_E(t)$ \ (Relative velocity)
-            \item $v_E(t)$ \ (Ego absolute velocity)
+            \item \textbf{Distance:} $d(t) = x_L(t) - x_E(t)$
+            \item \textbf{Relative Velocity:} $v_{rel}(t) = v_L(t) - v_E(t)$
+            \item \textbf{Ego Velocity} $v_E(t)$
         \end{itemize}
     \end{block}
     \begin{block}{Initial Conditions ($t=0$)}
@@ -59,67 +49,46 @@
             \item $v_L(0), v_E(0) \sim \mathcal{U}(10.0, 20.0)\,\text{m/s}$, $a_E(-1) = 0.0\,\text{m/s}^2$
         \end{itemize}
     \end{block}
-    \begin{block}{AI Module Structure}
-        \begin{itemize}
-            \item Multi-Layer Perceptron (MLP) mapping $S_t \to a_E(t)$.
-            \item Hidden layers: $[16, 32, 32, 16]$ with ReLU activation.
-        \end{itemize}
-    \end{block}
 \end{frame}
 
-\begin{frame}{Implementation - Safety Monitor \& Recovery}
-    \begin{block}{Safety Monitor (Deterministic \& Assured)}
-        Computes minimum distance required to avoid collision if the Leader brakes with maximum deceleration ($a_{max\_brake} = -8.0\,\text{m/s}^2$):
+\begin{frame}{Implementation}
+    \begin{block}{Safety Monitor}
+        Computes minimum distance required to avoid collision: check the $d(t) \le d_{critical}$ condition.
         \begin{equation*}
             d_{critical} = \max\left(0, v_E(t) \cdot \Delta t + \frac{v_E(t)^2 - v_L(t)^2}{2\cdot |a_{max\_brake}|}\right)
         \end{equation*}
         \begin{itemize}
             \item $v_E(t) \cdot \Delta t$ accounts for the system's 1-tick reaction delay.
-            \item \textbf{Condition:} Safety Monitor takes control if $d(t) \le d_{critical}$.
         \end{itemize}
     \end{block}
     \begin{block}{Recovery Function}
         \begin{itemize}
-            \item Fail-safe behavior: Apply maximum deceleration ($a_E = -8.0\,\text{m/s}^2$).
+            \item \textbf{Fail-safe behavior}: Apply maximum deceleration ($a_E = -8.0\,\text{m/s}^2$).
         \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{Implementation - RL Environment \& Training}
-    \begin{block}{Reward Function ($R_t = R_{distance} + R_{comfort} + R_{penalty}$)}
+\begin{frame}{Implementation}
+    \begin{block}{Reward}
+        The reward Function is defined as $R_t = R_{distance} + R_{comfort} + R_{penalty}$ and takes into account:
         \begin{itemize}
-            \item $R_{distance} = -|d(t) - 10|$ (Keep target distance of $10\,\text{m}$).
-            \item $R_{comfort} = -0.9 |a_E(t-1) - a_E(t)|$ (Penalize sudden changes).
-            \item $R_{penalty} = -20$ if $d(t) \le d_{critical}$ (Penalize entering critical zone).
-            \item $R_{terminal} = -1000$ on collision ($d(t) \le 0$) or lost leader ($d(t) > 50\,\text{m}$).
-        \end{itemize}
-    \end{block}
-    \begin{block}{Tech Stack \& Hyperparameters}
-        \begin{itemize}
-            \item \textbf{Training:} SB3 PPO ($\gamma=0.99$, \texttt{batch\_size}=64, \texttt{n\_steps}=1024, \texttt{clip\_range}=0.2).
-            \item \textbf{Integration:} C++ Simulator, \texttt{pybind11} for Python training, and \texttt{ONNX} runtime for embedded deployment.
+            \item $R_{distance} = - \alpha \left|d(t) - d_{target}\right|$: Define the target distance from Ego to Leader (i.e., $d_{target}10m$).
+            \item $R_{comfort} = - \beta |a_E(t-1) - a_E(t)|$: Penalize sudden braking.
+            \item $R_{penalty} = -20$ if $d(t) \le d_{critical}$: Penalize entering critical zone.
+            \item $R_{terminal} = -1000$ if ($d(t) \le 0$) or ($d(t) > 50\,\text{m}$): Penalize simulation failure.
         \end{itemize}
     \end{block}
 \end{frame}
 
-\begin{frame}{Implementation - Simulation Results}
-    \begin{block}{Evaluation of Scenarios}
+\begin{frame}{Implementation}
+    \begin{block}{Results}
+        We have three differents scenarios:
         \begin{itemize}
-            \item \textbf{Success:} The safety monitor successfully triggers recovery braking when the leader vehicle brakes suddenly, avoiding collision.
-            \item \textbf{Collision / Leader Lost:} Boundaries are validated during training.
+            \item \textbf{Success:} The Ego follow the leader within the correct interval.
+            \item \textbf{Collision}: Lower bound critical distance reached.
+            \item \textbf{Leader Lost}: Upeer bound critical distance reached.
         \end{itemize}
     \end{block}
-    \begin{columns}
-        \begin{column}{.33\textwidth}
-            QUI IMMAGINE success
-        \end{column}
-        \begin{column}{.33\textwidth}
-            QUI IMMAGINE collision
-        \end{column}
-        \begin{column}{.33\textwidth}
-            QUI IMMAGINE leader-lost
-        \end{column}
-    \end{columns}
 \end{frame}
 
 \begin{frame}{Implementation - Results}
