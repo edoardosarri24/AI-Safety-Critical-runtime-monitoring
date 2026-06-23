@@ -25,10 +25,22 @@ To compile the C++ simulator with Python bindings and train the PPO agent:
 ```
 
 ### Step 3: Inference
-To compile and execute the C++ inference simulation using the trained ONNX model:
+To compile and execute the inference simulation using the trained ONNX model:
+
+##### Standard
+To compile and execute the C++ inference simulation using the trained ONNX model. The results will be produce in [data](data/) directory.
 ```bash
 ./exec/inference.sh
 ```
+
+##### Interactive GUI
+Runs the Gymnasium environment with real-time Pygame visualization:
+```bash
+./exec/inference.sh -v   # or --visualize
+```
+Inside the GUI:
+- `Space`: Pause and resume the simulation.
+- `Esc`: Quit the simulation.
 
 # Project Structure
 Below is the directory and file structure of the project:
