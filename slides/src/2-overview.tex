@@ -56,18 +56,6 @@
 \end{frame}
 
 \begin{frame}{Overview}
-    \begin{block}{Product}
-        AI-based safety functions that are trained offline and then embedded in the system.
-        \vfil
-        We speak about \textit{intended functionality}: a high level of intructions set eather than specific statements.
-        \begin{itemize}
-            \item Explainable and Interpretable: \textit{Class I} scenario.
-            \item Back box: \textit{Class II} scenario.
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}{Overview}
     \begin{block}{Runtime}
         AI models that update/adapt online during system execution.
         \begin{itemize}
@@ -76,17 +64,6 @@
             \item \textbf{Limted adaptation:} The parameters chainging is clapped.
             \item \textbf{Limted Actuation:} The magnitude of the AI action is clapped.
             \item \textbf{Library-based Offline:} A deterministic choice (i.e, \texttt{if/else}) choose among a set of model that are conform to safety standard.
-        \end{itemize}
-    \end{block}
-\end{frame}
-
-\begin{frame}{Overview}
-    \begin{block}{Process}
-        AI models are used to design/develop/test the system.
-        \begin{itemize}
-            \item \textbf{Specification:} NLP (e.g., transformers) models for hazard analysis.
-            \item \textbf{Design/Testing:} Code and test code base.
-            \item \textbf{AutoML:} Reinforcement learning for hyperparameter tuning.
         \end{itemize}
     \end{block}
 \end{frame}
