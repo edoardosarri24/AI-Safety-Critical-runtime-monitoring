@@ -36,7 +36,7 @@ To compile and execute the C++ inference simulation using the trained ONNX model
 ##### Interactive GUI
 Runs the Gymnasium environment with real-time Pygame visualization:
 ```bash
-./exec/inference.sh -v   # or --visualize
+./exec/inference.sh [-v|--visualize]
 ```
 Inside the GUI:
 - `Space`: Pause and resume the simulation.
