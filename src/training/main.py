@@ -3,7 +3,8 @@
 # dependencies = [
 #       "stable_baselines3",
 #       "torch",
-#       "pybind11"
+#       "pybind11",
+#       "pygame"
 # ]
 # ///
 
